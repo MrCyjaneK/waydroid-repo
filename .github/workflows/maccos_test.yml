@@ -21,7 +21,7 @@ jobs:
       #     limit-access-to-actor: false
       - name: install dependencies
         run: |
-          brew install unbound boost@1.76 zmq autoconf automake && brew link boost@1.76
+          brew install unbound boost@1.76 zmq autoconf automake libtool && brew link boost@1.76
       - name: Patch sources
         run: |
           git config --global --add safe.directory '*'
