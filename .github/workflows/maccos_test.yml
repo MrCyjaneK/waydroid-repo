@@ -1,0 +1,56 @@
+name: Run commands on different operating systems
+on: [ push ]
+jobs:
+  macos:
+    name: macos build
+    runs-on: macos-14
+    steps:
+      - name: Checkout tools repo
+        uses: actions/checkout@v4
+        with:
+          repository: MrCyjaneK/monero_c
+          fetch-depth: 0
+          submodules: recursive
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        with:
+          detached: true
+      - name: Patch sources
+        run: |
+          git config --global --add safe.directory '*'
+          git config --global user.email "ci@mrcyjanek.net"
+          git config --global user.name "CI mrcyjanek.net"
+          ./apply_patches.sh ${{ matrix.coin }}
+      - name: build
+        run: |
+          ./build_single.sh monero aarch64-host-apple-darwin -j$(nproc) 
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
