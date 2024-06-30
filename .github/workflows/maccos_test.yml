@@ -2,6 +2,9 @@ name: Run commands on different operating systems
 on: [ push ]
 jobs:
   macos:
+    strategy:
+      matrix:
+        coin: [monero, wownero]
     name: macos build
     runs-on: macos-14
     steps:
@@ -11,11 +14,14 @@ jobs:
           repository: MrCyjaneK/monero_c
           fetch-depth: 0
           submodules: recursive
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        with:
-          detached: true
-          limit-access-to-actor: false
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v3
+      #   with:
+      #     detached: true
+      #     limit-access-to-actor: false
+      - name: install dependencies
+        run: |
+          brew install unbound boost@1.76 zmq autoconf automake && brew link boost@1.76
       - name: Patch sources
         run: |
           git config --global --add safe.directory '*'
@@ -24,8 +30,19 @@ jobs:
           ./apply_patches.sh ${{ matrix.coin }}
       - name: build
         run: |
-          ./build_single.sh monero aarch64-host-apple-darwin -j$(nproc) 
-          
+          ./build_single.sh ${{ matrix.coin }} aarch64-host-apple-darwin -j$(nproc) 
+      - name: rename artifacts
+        run: |
+          mkdir release/gh/
+          for i in release/${{ matrix.coin }}/*
+          do
+              mv "$i" "release/gh/${{ matrix.coin }}_$(basename $i)"
+          done
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: release/gh/*
 
 
 
