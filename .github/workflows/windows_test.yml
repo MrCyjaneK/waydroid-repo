@@ -1,12 +1,12 @@
 name: Run commands on different operating systems
 on: [ push ]
 jobs:
-  ios:
+  windows:
     strategy:
       matrix:
         coin: [monero, wownero]
         stealth: [LIBSTEALTH_DISABLED]
-    name: ios build
+    name: windows build
     runs-on: windows-latest
     steps:
       - name: Checkout unnamed_monero_wallet repo
@@ -19,7 +19,7 @@ jobs:
         with:
           msystem: MINGW64
           update: true
-          install: git mingw-w64-x86_64-xz
+          install: git mingw-w64-x86_64-xz mingw-w64-x86_64-gcc
       - name: Codegen
         run: ./codegen.sh -D${{ matrix.coin }} -D${{ matrix.stealth }}
       - uses: kuhnroyal/flutter-fvm-config-action@v2
