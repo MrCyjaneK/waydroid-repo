@@ -1,0 +1,61 @@
+name: Run commands on different operating systems
+on: [ push ]
+jobs:
+  ios:
+    strategy:
+      matrix:
+        coin: [monero, wownero]
+        stealth: [LIBSTEALTH_DISABLED]
+    name: ios build
+    runs-on: windows-latest
+    steps:
+      - name: Checkout unnamed_monero_wallet repo
+        uses: actions/checkout@v4
+        with:
+          repository: MrCyjaneK/unnamed_monero_wallet
+          fetch-depth: 0
+          submodules: recursive
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: git mingw-w64-x86_64-xz
+      - name: Codegen
+        run: ./codegen.sh -D${{ matrix.coin }} -D${{ matrix.stealth }}
+      - uses: kuhnroyal/flutter-fvm-config-action@v2
+        id: fvm-config-action
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
+          channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
+      - name: Flutter pub get
+        run: |
+          flutter pub get
+      - name: make version
+        run: |
+          make version
+      - name: build
+        run: |
+          flutter build windows -v
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
