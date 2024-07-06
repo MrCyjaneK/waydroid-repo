@@ -33,9 +33,8 @@ jobs:
       - name: Flutter pub get
         run: |
           flutter pub get
-      - name: ./build_changelog.sh
-        run: ./build_changelog.sh
-        shell: msys2 {0}
+      - name: ./build_changelog.sh [dummy]
+        run: dart run flutter_oss_licenses:generate -o lib/helpers/licenses.g.dart
       - name: make version
         run: make version
         shell: msys2 {0}
