@@ -35,7 +35,7 @@ jobs:
           flutter pub get
       - name: ./build_changelog.sh
         run: ./build_changelog.sh
-          shell: msys2 {0}
+        shell: msys2 {0}
       - name: make version
         run: make version
         shell: msys2 {0}
