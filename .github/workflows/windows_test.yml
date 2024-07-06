@@ -23,6 +23,10 @@ jobs:
       - name: Codegen
         run: ./codegen.sh -D${{ matrix.coin }} -D${{ matrix.stealth }}
         shell: msys2 {0}
+      - name: ./build_changelog.sh
+        run: ./build_changelog.sh
+        shell: msys2 {0}
+        continue-on-error: true
       - uses: kuhnroyal/flutter-fvm-config-action@v2
         id: fvm-config-action
       - uses: subosito/flutter-action@v2
@@ -33,7 +37,7 @@ jobs:
       - name: Flutter pub get
         run: |
           flutter pub get
-      - name: ./build_changelog.sh [dummy]
+      - name: licenses [dummy]
         run: dart run flutter_oss_licenses:generate -o lib/helpers/licenses.g.dart
       - name: make version
         run: make version
