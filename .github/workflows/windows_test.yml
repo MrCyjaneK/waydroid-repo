@@ -19,7 +19,7 @@ jobs:
         with:
           msystem: MINGW64
           update: true
-          install: git mingw-w64-x86_64-gcc mingw-w64-x86_64-make mingw-w64-x86_64-xz 
+          install: git make xz mingw-w64-x86_64-gcc
       - name: Codegen
         run: ./codegen.sh -D${{ matrix.coin }} -D${{ matrix.stealth }}
         shell: msys2 {0}
@@ -33,8 +33,7 @@ jobs:
         run: |
           flutter pub get
       - name: make version
-        run: |
-          make version
+        run: make version
         shell: msys2 {0}
       - name: build
         run: |
