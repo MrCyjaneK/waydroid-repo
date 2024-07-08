@@ -18,8 +18,7 @@ jobs:
       - uses: msys2/setup-msys2@v2
         with:
           msystem: MINGW64
-          update: true
-          install: git make xz autotools mingw-w64-x86_64-gcc
+          install: git make xz autotools mingw-w64-x86_64-gcc mingw-w64-x86_64-jq
       - name: Codegen
         run: ./codegen.sh -D${{ matrix.coin }} -D${{ matrix.stealth }}
         shell: msys2 {0}
@@ -45,8 +44,8 @@ jobs:
       - name: build
         run: flutter build windows
         continue-on-error: true
-      - name: make version
-        run: make windows_libs_download
+      - name: make windows_libs_download
+        run: bash -x ./build_moneroc.sh --prebuild --coin monero --tag v0.18.3.3-RC47 --triplet x86_64-w64-mingw32 --location build/windows/x64/runner/Release
         shell: msys2 {0}
       - name: Archive Release
         uses: thedoctor0/zip-release@master
