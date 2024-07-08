@@ -19,7 +19,7 @@ jobs:
         with:
           msystem: MINGW64
           update: true
-          install: git make xz mingw-w64-x86_64-gcc
+          install: git make xz autotools mingw-w64-x86_64-gcc
       - name: Codegen
         run: ./codegen.sh -D${{ matrix.coin }} -D${{ matrix.stealth }}
         shell: msys2 {0}
