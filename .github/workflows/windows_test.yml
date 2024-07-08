@@ -45,6 +45,9 @@ jobs:
       - name: build
         run: flutter build windows
         continue-on-error: true
+      - name: make version
+        run: make windows_libs_download
+        shell: msys2 {0}
       - name: Archive Release
         uses: thedoctor0/zip-release@master
         with:
