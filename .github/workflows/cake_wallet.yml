@@ -192,7 +192,12 @@ jobs:
         with:
           path: /opt/android/cake_wallet/build/app/outputs/flutter-apk/test-apk/
 
-
+      - name: remove android_ndk
+        run: |
+          rm -rf monero/contrib/depends/built/*/android_ndk
+          rm -rf monero/contrib/depends/sources/android-ndk-r26d-linux.zip
+          rm -rf wownero/contrib/depends/built/*/android_ndk
+          rm -rf wownero/contrib/depends/sources/android-ndk-r26d-linux.zip
 
 
 
