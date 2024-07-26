@@ -25,17 +25,29 @@ jobs:
           git config --global user.email "ci@mrcyjanek.net"
           git config --global user.name "CI mrcyjanek.net"
           ./apply_patches.sh monero
+          ./apply_patches.sh wownero
 
       - name: ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
           key: ${{ github.job }}-monero
 
+      - name: Cache built
+        if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+        uses: actions/cache@v4
+        with:
+          path: |
+            */contrib/depends/built/*
+            */contrib/depends/sources/*
+          key: depends-${{ github.job }}-monero-${{ hashFiles('*/contrib/depends/packages/*.mk') }}
+
       - name: build monero_c
         run: |
           ./build_single.sh monero aarch64-linux-android -j$(nproc)
+          ./build_single.sh wownero aarch64-linux-android -j$(nproc)
+          unxz -f -k release/*/*.xz
           mv release /opt/monero_c_release
-        
+
       - name: Free Disk Space (Ubuntu)
         uses: insightsengineering/disk-space-reclaimer@v1
         with:
