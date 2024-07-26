@@ -31,9 +31,9 @@ jobs:
         with:
           key: ${{ github.job }}-monero
 
-      - name  : build
+      - name: build monero_c
         run: |
-          ./build_single.sh monero aarch64-host-apple-darwin -j$(nproc)
+          ./build_single.sh monero aarch64-linux-android -j$(nproc)
           mv release /opt/monero_c_release
         
       - name: Free Disk Space (Ubuntu)
