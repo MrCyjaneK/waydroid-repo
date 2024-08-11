@@ -1,0 +1,18 @@
+#!/bin/bash
+if [[ "x$VERSION_CODENAME" == "x" ]];
+then
+    echo "Invalid VERSION_CODENAME";
+    exit 1
+fi
+set -xe
+cbuild="$1"
+cd /root
+git clone --depth=1 "https://github.com/waydroid/$cbuild"
+cd "$cbuild"
+build_changelog
+mk-build-deps -ir -t "apt-get -o Debug::pkgProblemResolver=yes -y --no-install-recommends"
+pip3 install cython --break-system-packages || pip3 install cython
+debuild -b -uc -us
+(mkdir -p /apt/ || true)
+mv ../*.deb /apt/
+VERSION_CODENAME=$VERSION_CODENAME build_apt_repo

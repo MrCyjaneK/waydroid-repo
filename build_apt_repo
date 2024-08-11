@@ -1,0 +1,52 @@
+#!/bin/bash
+set -x
+cd /apt
+
+rm -rf main Packages Packages.gz Release InRelease conf || true
+
+if [[ "x$VERSION_CODENAME" == "x" ]];
+then
+    echo "Invalid VERSION_CODENAME"
+    exit 1
+fi
+
+REPO_PREFIX=""
+if [[ "x$PROD_CONF" == "xyes" ]];
+then
+    REPO_PREFIX="main/binary-all/"
+    mkdir -p main/binary-all
+fi
+
+if [[ "x$PROD_CONF" == "xyes" ]];
+then
+    dpkg-scanpackages --multiversion /apt /dev/null | sed 's/\/apt/dists\/'"$VERSION_CODENAME"'/g' > "$REPO_PREFIX"Packages
+else
+    dpkg-scanpackages --multiversion /apt /dev/null | sed 's/\/apt\///g' > "$REPO_PREFIX"Packages
+fi;
+gzip --keep --force -9 "$REPO_PREFIX"Packages
+mkdir conf || true
+cat > conf/distributions << EOF
+Origin: mrcyjanek
+Label: mrcyjanek
+Codename: $VERSION_CODENAME
+Architectures: i386 amd64 arm64 armhf all
+Components: main
+Description: Czarek Nakamoto's repo
+SignWith: 7CE0331F71E0A238
+EOF
+
+cat conf/distributions > Release
+echo -e "Date: `LANG=C date -Ru`" >> Release
+echo -e 'MD5Sum:' >> Release
+printf ' '$(md5sum "$REPO_PREFIX"Packages.gz | cut --delimiter=' ' --fields=1)' %16d '"$REPO_PREFIX"'Packages.gz' $(wc --bytes "$REPO_PREFIX"Packages.gz | cut --delimiter=' ' --fields=1) >> Release
+printf '\n '$(md5sum "$REPO_PREFIX"Packages | cut --delimiter=' ' --fields=1)' %16d '"$REPO_PREFIX"'Packages' $(wc --bytes "$REPO_PREFIX"Packages | cut --delimiter=' ' --fields=1) >> Release
+echo -e '\nSHA256:' >> Release
+printf ' '$(sha256sum "$REPO_PREFIX"Packages.gz | cut --delimiter=' ' --fields=1)' %16d '"$REPO_PREFIX"'Packages.gz' $(wc --bytes "$REPO_PREFIX"Packages.gz | cut --delimiter=' ' --fields=1) >> Release
+printf '\n '$(sha256sum "$REPO_PREFIX"Packages | cut --delimiter=' ' --fields=1)' %16d '"$REPO_PREFIX"'Packages' $(wc --bytes "$REPO_PREFIX"Packages | cut --delimiter=' ' --fields=1) >> Release
+rm InRelease || true
+if [[ "x$PROD_CONF" == "xyes" ]];
+then
+    gpg --clearsign --digest-algo SHA512 -o InRelease Release
+fi
+sleep 1
+apt update || true

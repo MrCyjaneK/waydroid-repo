@@ -1,0 +1,71 @@
+name: ubuntu-latest
+run-name: ${{ gitea.actor }} is building waydroid.
+on: [push]
+
+jobs:
+  ubuntu-latest:
+    runs-on: ubuntu-latest
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - name: Run Test
+        run: |
+          uname -a && \
+          cat /etc/os-release && \
+          printenv          
+      - name: Estabilish SSH connection
+        run: |
+          apt update && \
+          apt install ssh -y && \
+          (mkdir ~/.ssh || true) && \
+          echo "$SSH_KEY" | tr -d '\r' > ~/.ssh/id_rsa && \
+          chmod 600 ~/.ssh/id_rsa && \
+          
+          ssh -oStrictHostKeyChecking=no waydroid@waydroidrepo.mrcyjanek.net uname -a          
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+      - name: Install build tools
+        run: |
+          set -xe && \
+          (apt update || true) && \
+          apt install -y build-essential cdbs devscripts equivs fakeroot dpkg-dev rsync gnupg wget curl python3-pip git && \
+          wget "https://github.com/MrCyjaneK/actions-sandbox-for-testing/raw/branch/main/build_apt_repo" -O /bin/build_apt_repo && \
+          wget "https://github.com/MrCyjaneK/actions-sandbox-for-testing/raw/branch/main/build_changelog" -O /bin/build_changelog && \
+          wget "https://github.com/MrCyjaneK/actions-sandbox-for-testing/raw/branch/main/build_waydroid_debs" -O /bin/build_waydroid_debs && \
+          chmod +x /bin/build_changelog /bin/build_apt_repo /bin/build_waydroid_debs && \
+          echo 'deb [trusted=yes] file:/apt/ ./' > /etc/apt/sources.list.d/self.list          
+      - name: import GPG key
+        run: |
+          echo "$APT_GPG" | gpg --import          
+        env:
+          APT_GPG: ${{ secrets.APT_GPG }}
+      - name: Build - libglibutil
+        run: . /etc/os-release && VERSION_CODENAME=$VERSION_CODENAME build_waydroid_debs libglibutil
+      - name: Build - libgbinder
+        run: . /etc/os-release && VERSION_CODENAME=$VERSION_CODENAME build_waydroid_debs libgbinder
+      - name: Build - gbinder-python
+        run: . /etc/os-release && VERSION_CODENAME=$VERSION_CODENAME build_waydroid_debs gbinder-python
+      - name: Build - waydroid
+        run: . /etc/os-release && VERSION_CODENAME=$VERSION_CODENAME build_waydroid_debs waydroid
+      - name: Build - waydroid-sensors (optional)
+        run: . /etc/os-release && VERSION_CODENAME=$VERSION_CODENAME build_waydroid_debs waydroid-sensors || true
+      - name: Grab arm64 builds
+        run: |
+          set -xe && \
+          cd /tmp && \
+          . /etc/os-release && \
+          wget -m --no-parent "http://waydroidrepo.mrcyjanek.net/arm64/dists/$VERSION_CODENAME/" && \
+          mv $(find /tmp -name '*.deb') /apt && \
+          exit 0 || exit 0          
+      - name: Deploy APT repo
+        run: |
+          set -xe && \
+          cd /apt && \
+          . /etc/os-release && \
+          PROD_CONF=yes VERSION_CODENAME=$VERSION_CODENAME build_apt_repo && \
+          echo "Deploying for: $VERSION_CODENAME" && \
+          ls -lah /apt && \
+          find /apt -type f && \
+          ssh -oStrictHostKeyChecking=no waydroid@waydroidrepo.mrcyjanek.net rm -rf \$HOME/amd64/dists/$VERSION_CODENAME && \
+          ssh -oStrictHostKeyChecking=no waydroid@waydroidrepo.mrcyjanek.net mkdir -p \$HOME/amd64/dists/$VERSION_CODENAME && \
+          rsync -rPc * waydroid@waydroidrepo.mrcyjanek.net:amd64/dists/$VERSION_CODENAME 
