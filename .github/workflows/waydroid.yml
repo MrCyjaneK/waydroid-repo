@@ -1,5 +1,5 @@
 name: ubuntu-latest
-run-name: ${{ gitea.actor }} is building waydroid.
+run-name: ${{ github.actor }} is building waydroid.
 on: [push]
 
 jobs:
