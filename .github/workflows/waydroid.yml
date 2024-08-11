@@ -11,7 +11,7 @@ jobs:
           - debian:oldstable
           - ubuntu:24.04
     container:
-      image: debian:stable
+      image: ${{ matrix.os }}
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
@@ -44,7 +44,7 @@ jobs:
           echo 'deb [trusted=yes] file:/apt/ ./' > /etc/apt/sources.list.d/self.list          
       - name: import GPG key
         run: |
-          echo "$APT_GPG" | head -c -1 | gpg --import          
+          echo "$APT_GPG" | gpg --import || true          
         env:
           APT_GPG: ${{ secrets.APT_GPG }}
       - name: Build - libglibutil
