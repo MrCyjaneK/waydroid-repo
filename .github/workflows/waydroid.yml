@@ -18,11 +18,12 @@ jobs:
       - name: Estabilish SSH connection
         run: |
           apt update && \
+          (mkdir ~/.ssh || true) && \
           echo "$SSH_KEY" | tr -d '\r' > ~/.ssh/id_rsa && \
+          chmod 600 ~/.ssh/id_rsa && \
+          chmod 600 ~/.ssh && \
           ls -lah ~/.ssh/id_rsa && \
           apt install ssh -y && \
-          (mkdir ~/.ssh || true) && \
-          chmod 600 ~/.ssh/id_rsa && \
           ssh -vvvv -oStrictHostKeyChecking=no waydroid@waydroidrepo.mrcyjanek.net uname -a          
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
