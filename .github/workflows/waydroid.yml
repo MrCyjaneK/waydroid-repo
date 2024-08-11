@@ -5,6 +5,7 @@ jobs:
   build_all:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         os: 
           - debian:stable
