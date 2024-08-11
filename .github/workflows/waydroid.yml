@@ -5,6 +5,8 @@ on: [push]
 jobs:
   ubuntu-latest:
     runs-on: ubuntu-latest
+    container:
+      image: debian:stable
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
