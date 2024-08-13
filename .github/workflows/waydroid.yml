@@ -8,9 +8,14 @@ jobs:
       fail-fast: false
       matrix:
         os: 
-          - debian:stable
-          - debian:oldstable
+          - debian:sid
+          - debian:bookworm
+          - debian:bullseye
+          - debian:trixie
+          - ubuntu:20.04
+          - ubuntu:22.04
           - ubuntu:24.04
+          - ubuntu:24.10
     container:
       image: ${{ matrix.os }}
     env:
@@ -61,15 +66,7 @@ jobs:
       - name: Build - waydroid
         run: . /etc/os-release && VERSION_CODENAME=$VERSION_CODENAME build_waydroid_debs waydroid
       - name: Build - waydroid-sensors (optional)
-        run: . /etc/os-release && VERSION_CODENAME=$VERSION_CODENAME build_waydroid_debs waydroid-sensors || true
-      - name: Grab arm64 builds
-        run: |
-          set -xe && \
-          cd /tmp && \
-          . /etc/os-release && \
-          wget -m --no-parent "http://waydroidrepo.mrcyjanek.net/arm64/dists/$VERSION_CODENAME/" && \
-          mv $(find /tmp -name '*.deb') /apt && \
-          exit 0 || exit 0          
+        run: . /etc/os-release && VERSION_CODENAME=$VERSION_CODENAME build_waydroid_debs waydroid-sensors || true        
       - name: Deploy APT repo
         run: |
           set -xe && \
@@ -79,9 +76,9 @@ jobs:
           echo "Deploying for: $VERSION_CODENAME" && \
           ls -lah /apt && \
           find /apt -type f && \
-          ssh -oStrictHostKeyChecking=no waydroid@waydroidrepo.mrcyjanek.net rm -rf \$HOME/amd64/dists/$VERSION_CODENAME && \
-          ssh -oStrictHostKeyChecking=no waydroid@waydroidrepo.mrcyjanek.net mkdir -p \$HOME/amd64/dists/$VERSION_CODENAME && \
-          rsync -rPc * waydroid@waydroidrepo.mrcyjanek.net:amd64/dists/$VERSION_CODENAME 
+          ssh -oStrictHostKeyChecking=no waydroid@waydroidrepo.mrcyjanek.net rm -rf \$HOME/arm64/dists/$VERSION_CODENAME && \
+          ssh -oStrictHostKeyChecking=no waydroid@waydroidrepo.mrcyjanek.net mkdir -p \$HOME/arm64/dists/$VERSION_CODENAME && \
+          rsync -rPc * waydroid@waydroidrepo.mrcyjanek.net:arm64/dists/$VERSION_CODENAME 
   build_amd64:
     needs: build_arm64
     runs-on: ubuntu-latest
