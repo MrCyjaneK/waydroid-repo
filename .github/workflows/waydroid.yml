@@ -18,6 +18,7 @@ jobs:
           - ubuntu:24.04
           - ubuntu:24.10
           - kalilinux/kali-last-release:latest
+          - kalilinux/kali-rolling:latest
     container:
       image: ${{ matrix.os }}
     env:
@@ -98,6 +99,7 @@ jobs:
           - ubuntu:24.04
           - ubuntu:24.10
           - kalilinux/kali-last-release:latest
+          - kalilinux/kali-rolling:latest
     container:
       image: ${{ matrix.os }}
     env:
