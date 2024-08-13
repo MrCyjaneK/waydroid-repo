@@ -9,6 +9,7 @@ jobs:
       matrix:
         os: 
           - debian:sid
+          - debian:buster
           - debian:bookworm
           - debian:bullseye
           - debian:trixie
@@ -86,9 +87,15 @@ jobs:
       fail-fast: false
       matrix:
         os: 
-          - debian:stable
-          - debian:oldstable
+          - debian:sid
+          - debian:buster
+          - debian:bookworm
+          - debian:bullseye
+          - debian:trixie
+          - ubuntu:20.04
+          - ubuntu:22.04
           - ubuntu:24.04
+          - ubuntu:24.10
     container:
       image: ${{ matrix.os }}
     env:
