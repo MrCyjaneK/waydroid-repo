@@ -16,10 +16,6 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-      - name: ccache
-        uses: hendrikmuhs/ccache-action@v1.2
-        with:
-          key: ${{ github.job }}-${{ matrix.os }}
       - name: Run Test
         run: |
           uname -a && \
@@ -37,6 +33,10 @@ jobs:
           ssh -vvvv -oStrictHostKeyChecking=no waydroid@waydroidrepo.mrcyjanek.net uname -a          
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: ${{ github.job }}-${{ matrix.os }}
       - name: Install build tools
         run: |
           set -xe && \
@@ -97,10 +97,6 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-      - name: ccache
-        uses: hendrikmuhs/ccache-action@v1.2
-        with:
-          key: ${{ github.job }}-${{ matrix.os }}
       - name: Run Test
         run: |
           uname -a && \
@@ -118,6 +114,10 @@ jobs:
           ssh -vvvv -oStrictHostKeyChecking=no waydroid@waydroidrepo.mrcyjanek.net uname -a          
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: ${{ github.job }}-${{ matrix.os }}
       - name: Install build tools
         run: |
           set -xe && \
