@@ -114,7 +114,12 @@ jobs:
         run: |
           uname -a && \
           cat /etc/os-release && \
-          printenv          
+          printenv  
+      - name: "Fix sid introducing itself as trixie"
+        if: matrix.os == 'debian:sid'
+        run: |
+          sed -i 's/VERSION_CODENAME=trixie/VERSION_CODENAME=sid/' /etc/os-release
+                    
       - name: Estabilish SSH connection
         run: |
           apt update && \
