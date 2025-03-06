@@ -1,0 +1,15 @@
+[submodule "libglibutil"]
+	path = libglibutil
+	url = https://github.com/waydroid/libglibutil
+[submodule "libgbinder"]
+	path = libgbinder
+	url = https://github.com/waydroid/libgbinder
+[submodule "gbinder-python"]
+	path = gbinder-python
+	url = https://github.com/waydroid/gbinder-python
+[submodule "waydroid"]
+	path = waydroid
+	url = https://github.com/waydroid/waydroid
+[submodule "waydroid-sensors"]
+	path = waydroid-sensors
+	url = https://github.com/waydroid/waydroid-sensors

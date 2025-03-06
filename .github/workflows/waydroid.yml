@@ -85,8 +85,7 @@ jobs:
           echo "Deploying for: $VERSION_CODENAME" && \
           ls -lah /apt && \
           find /apt -type f && \
-          ssh -oStrictHostKeyChecking=no waydroid@waydroidrepo.mrcyjanek.net rm -rf \$HOME/arm64/dists/$VERSION_CODENAME && \
-          ssh -oStrictHostKeyChecking=no waydroid@waydroidrepo.mrcyjanek.net mkdir -p \$HOME/arm64/dists/$VERSION_CODENAME && \
+          (ssh -oStrictHostKeyChecking=no waydroid@waydroidrepo.mrcyjanek.net mkdir -p \$HOME/arm64/dists/$VERSION_CODENAME || true) && \
           rsync -rPc * waydroid@waydroidrepo.mrcyjanek.net:arm64/dists/$VERSION_CODENAME 
   build_amd64:
     needs: build_arm64
@@ -180,6 +179,5 @@ jobs:
           echo "Deploying for: $VERSION_CODENAME" && \
           ls -lah /apt && \
           find /apt -type f && \
-          ssh -oStrictHostKeyChecking=no waydroid@waydroidrepo.mrcyjanek.net rm -rf \$HOME/amd64/dists/$VERSION_CODENAME && \
-          ssh -oStrictHostKeyChecking=no waydroid@waydroidrepo.mrcyjanek.net mkdir -p \$HOME/amd64/dists/$VERSION_CODENAME && \
+          (ssh -oStrictHostKeyChecking=no waydroid@waydroidrepo.mrcyjanek.net mkdir -p \$HOME/amd64/dists/$VERSION_CODENAME || true) && \
           rsync -rPc * waydroid@waydroidrepo.mrcyjanek.net:amd64/dists/$VERSION_CODENAME 

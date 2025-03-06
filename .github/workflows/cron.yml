@@ -1,0 +1,17 @@
+name: Update Submodules
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+
+jobs:
+  update_submodules:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository with submodules
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Update submodules if there are new commits
+        run: ./check_submodules.sh
