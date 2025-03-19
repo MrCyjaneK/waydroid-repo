@@ -28,7 +28,7 @@ if [ $changed -eq 1 ]; then
 echo "Changes detected. Updating the main repository with new submodule pointers..."
 git add .
 git commit -m "Update submodules to latest commits" || echo "Nothing to commit"
-git push origin HEAD
+git push origin HEAD || exit 1
 else
 echo "No submodule updates found."
 fi
