@@ -29,6 +29,10 @@ echo "Changes detected. Updating the main repository with new submodule pointers
 git add .
 git commit -m "Update submodules to latest commits" || echo "Nothing to commit"
 git push origin HEAD || exit 1
+# Set environment variable for GitHub Actions
+echo "SUBMODULES_UPDATED=true" >> $GITHUB_ENV
+echo "Submodules were updated, rebuild will be triggered."
 else
 echo "No submodule updates found."
+echo "SUBMODULES_UPDATED=false" >> $GITHUB_ENV
 fi

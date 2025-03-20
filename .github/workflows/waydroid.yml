@@ -1,5 +1,7 @@
 name: build_all
-on: [push]
+on: 
+  repository_dispatch:
+    types: [rebuild_waydroid]
 
 jobs:
   build_arm64:
