@@ -2,6 +2,7 @@ name: build_all
 on: 
   repository_dispatch:
     types: [rebuild_waydroid]
+  workflow_dispatch:
 
 jobs:
   build_arm64:
