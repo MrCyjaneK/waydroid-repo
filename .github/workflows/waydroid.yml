@@ -114,6 +114,11 @@ jobs:
           - ubuntu:24.10
           - ubuntu:25.04
           - ubuntu:25.10
+          - pureos/pureos:landing
+          - pureos/pureos:crimson
+          - pureos/pureos:byzantium
+          - pureos/pureos:amber-phone
+          - pureos/pureos:amber
           # - kalilinux/kali-last-release:latest
           # - kalilinux/kali-rolling:latest
     container:
