@@ -19,9 +19,9 @@ jobs:
           - ubuntu:20.04
           - ubuntu:22.04
           - ubuntu:24.04
-          - ubuntu:24.10
           - ubuntu:25.04
           - ubuntu:25.10
+          - ubuntu:26.04
           - pureos/pureos:landing
           - pureos/pureos:crimson
           - pureos/pureos:byzantium
@@ -110,9 +110,9 @@ jobs:
           - ubuntu:20.04
           - ubuntu:22.04
           - ubuntu:24.04
-          - ubuntu:24.10
           - ubuntu:25.04
           - ubuntu:25.10
+          - ubuntu:26.04
           - pureos/pureos:landing
           - pureos/pureos:crimson
           - pureos/pureos:byzantium
