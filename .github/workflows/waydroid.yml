@@ -33,10 +33,10 @@ jobs:
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
-      - name: "Fix sid introducing itself as trixie"
+      - name: "Fix sid introducing itself as forky"
         if: matrix.os == 'debian:sid'
         run: |
-          sed -i 's/VERSION_CODENAME=trixie/VERSION_CODENAME=sid/' /etc/os-release
+          sed -i 's/^VERSION_CODENAME=.*/VERSION_CODENAME=sid/' /etc/os-release
           
       - name: Run Test
         run: |
