@@ -6,7 +6,7 @@ on:
 
 jobs:
   build_arm64:
-    runs-on: buildjet-2vcpu-ubuntu-2204-arm
+    runs-on: ubuntu-26.04-arm
     strategy:
       fail-fast: false
       matrix:
