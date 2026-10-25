@@ -59,7 +59,8 @@ jobs:
         run: |
           set -xe && \
           (apt update || true) && \
-          apt install -y build-essential cdbs devscripts equivs fakeroot dpkg-dev rsync gnupg wget curl python3-pip git && \
+          (apt install cdbs -y || true) && \
+          apt install -y build-essential devscripts equivs fakeroot dpkg-dev rsync gnupg wget curl python3-pip git && \
           wget "https://raw.githubusercontent.com/MrCyjaneK/waydroid-repo/main/build_apt_repo" -O /bin/build_apt_repo && \
           wget "https://raw.githubusercontent.com/MrCyjaneK/waydroid-repo/main/build_changelog" -O /bin/build_changelog && \
           wget "https://raw.githubusercontent.com/MrCyjaneK/waydroid-repo/main/build_waydroid_debs" -O /bin/build_waydroid_debs && \
